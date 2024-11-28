@@ -2,27 +2,16 @@ import './App.scss'
 import avatar from './images/bozai.png'
 import React from 'react';
 
-/**
- * 评论列表的渲染和操作
- *
- * 1. 根据状态渲染评论列表
- * 2. 删除评论
- */
 
-// 评论列表数据
 const defaultList = [
   {
-    // 评论id
     rpid: 3,
-    // 用户信息
     user: {
       uid: '13258165',
       avatar: '',
       uname: 'Jack',
     },
-    // 评论内容
     content: 'jjjjjjj',
-    // 评论时间
     ctime: '10-18 08:15',
     like: 88,
   },
@@ -49,26 +38,12 @@ const defaultList = [
     like: 66,
   },
 ]
-// 当前登录用户信息
 const user = {
-  // 用户id
   uid: '30009257',
-  // 用户头像
   avatar,
-  // 用户昵称
   uname: 'kelly',
 }
 
-/**
- * 导航 Tab 的渲染和操作
- *
- * 1. 渲染导航 Tab 和高亮
- * 2. 评论列表排序
- *  最热 => 喜欢数量降序
- *  最新 => 创建时间降序
- */
-
-// 导航 Tab 数组
 const tabs = [
   { type: 'hot', text: '最热' },
   { type: 'time', text: '最新' },
@@ -77,7 +52,17 @@ const tabs = [
 
 
 const App = () => {
-  const [commentList, setCommentList] = React.useState(defaultList)
+  const [commentList, setCommentList] = React.useState(defaultList) 
+  const [navList, setNavList] = React.useState(tabs) 
+  const [currrentNavType, setType] = React.useState("hot") 
+
+  const sortedByCtimeAsc = defaultList.slice().sort((a, b) => {
+    return new Date(a.ctime) - new Date(b.ctime);
+  });
+  
+
+
+
   function onDeletClicked(userId){
     console.log(userId)
     console.log(userId)
@@ -85,7 +70,30 @@ const App = () => {
     setCommentList(newCommentList)
     
   }
-  
+  function onNavItemClick(type){
+    setType(type)
+    let sortedCommentList
+    if(type==='hot'){
+      sortedCommentList = commentList.slice().sort((a, b) => b.like - a.like)
+      setCommentList()
+    }else{
+      sortedCommentList = commentList.slice().sort((a, b) => {
+        return new Date(b.ctime) - new Date(a.ctime);
+      });
+    }
+    setCommentList(sortedCommentList)
+    
+  }
+  function NavListItemList() {
+    return navList.map(
+      item=>
+      <span 
+      className={`nav-item ${currrentNavType === item.type&& 'active' }}` } 
+      onClick={()=>onNavItemClick(item.type)}  
+      key={item.type}>
+      {item.text}
+      </span>)
+  }
   function CommentItemList() {
         
     return  commentList.map(item=><div className="reply-item" key = {item.user.uid}>
@@ -134,8 +142,7 @@ const App = () => {
           </li>
           <li className="nav-sort">
             {/* 高亮类名： active */}
-            <span className='nav-item'>最新</span>
-            <span className='nav-item'>最热</span>
+              <NavListItemList/>
           </li>
         </ul>
       </div>
