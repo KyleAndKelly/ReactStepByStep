@@ -1,7 +1,7 @@
 import './App.scss'
 import avatar from './images/bozai.png'
 import React from 'react';
-
+import classNames from 'classnames'
 
 const defaultList = [
   {
@@ -88,7 +88,8 @@ const App = () => {
     return navList.map(
       item=>
       <span 
-      className={`nav-item ${currrentNavType === item.type&& 'active' }}` } 
+      // className={`nav-item ${currrentNavType === item.type&& 'active' }}` } 
+      className={classNames('nav-item',{actice:currrentNavType === item.type})}
       onClick={()=>onNavItemClick(item.type)}  
       key={item.type}>
       {item.text}
