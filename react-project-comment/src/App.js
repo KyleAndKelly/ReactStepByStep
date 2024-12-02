@@ -2,6 +2,8 @@ import './App.scss'
 import avatar from './images/bozai.png'
 import React from 'react';
 import classNames from 'classnames'
+import { v4 as uuidv4 } from 'uuid'
+import dayjs from "dayjs"
 
 const defaultList = [
   {
@@ -55,6 +57,7 @@ const App = () => {
   const [commentList, setCommentList] = React.useState(defaultList) 
   const [navList, setNavList] = React.useState(tabs) 
   const [currrentNavType, setType] = React.useState("hot") 
+  const textInputRef = React.useRef("")
 
   const sortedByCtimeAsc = defaultList.slice().sort((a, b) => {
     return new Date(a.ctime) - new Date(b.ctime);
@@ -82,6 +85,29 @@ const App = () => {
       });
     }
     setCommentList(sortedCommentList)
+    
+  }
+  function onSendButtonClicked(){
+    if(textInputRef.current.value === ""){
+      return
+    }
+    const inputMsgObj = {
+      rpid: 4,
+      user: {
+        uid: uuidv4(),
+        avatar,
+        uname: 'Kat',
+      },
+      content: textInputRef.current.value,
+      ctime: dayjs(new Date()).format('MM-DD hh::mm'),
+      like: 0,
+    }
+    console.log(inputMsgObj.user.uid)
+    setCommentList([...commentList,
+      inputMsgObj])
+    //clear
+    textInputRef.current.value = ''
+    textInputRef.current.focus()
     
   }
   function NavListItemList() {
@@ -162,10 +188,11 @@ const App = () => {
             <textarea
               className="reply-box-textarea"
               placeholder="发一条友善的评论"
+              ref = {textInputRef}
             />
             {/* 发布按钮 */}
             <div className="reply-box-send">
-              <div className="send-text">发布</div>
+              <div className="send-text" onClick={onSendButtonClicked}>发布</div>
             </div>
           </div>
         </div>
