@@ -4,6 +4,8 @@ import React from 'react';
 import classNames from 'classnames'
 import { v4 as uuidv4 } from 'uuid'
 import dayjs from "dayjs"
+import axios from "axios"
+import {useEffect} from 'react'
 
 const defaultList = [
   {
@@ -54,7 +56,8 @@ const tabs = [
 
 
 const App = () => {
-  const [commentList, setCommentList] = React.useState(defaultList) 
+  // const [commentList, setCommentList] = React.useState(defaultList) 
+
   const [navList, setNavList] = React.useState(tabs) 
   const [currrentNavType, setType] = React.useState("hot") 
   const textInputRef = React.useRef("")
@@ -62,7 +65,23 @@ const App = () => {
   const sortedByCtimeAsc = defaultList.slice().sort((a, b) => {
     return new Date(a.ctime) - new Date(b.ctime);
   });
-  
+
+  function useGetCommentList(){
+    const [commentList, setCommentList] = React.useState([]) 
+    useEffect(
+      ()=>{
+        async function getCommentList(){
+           const res = await axios.get("http://localhost:4009/list")
+           console.log(res.data) 
+           setCommentList(res.data)
+        }
+        getCommentList()
+      },[]
+    )
+    return {commentList, setCommentList}
+  }
+
+  const {commentList, setCommentList } = useGetCommentList()
 
 
 
@@ -121,41 +140,43 @@ const App = () => {
       {item.text}
       </span>)
   }
-  function CommentItemList() {
-        
-    return  commentList.map(item=><div className="reply-item" key = {item.user.uid}>
-    {/* 头像 */}
-    <div className="root-reply-avatar">
-      <div className="bili-avatar">
-        <img
-          className="bili-avatar-img"
-          alt=""
-        />
+
+  function CommentItem({item}){
+  return (
+  <div className="reply-item" >
+      {/* 头像 */}
+      <div className="root-reply-avatar">
+        <div className="bili-avatar">
+          <img
+            className="bili-avatar-img"
+            alt=""
+          />
+        </div>
       </div>
-    </div>
-
-    <div className="content-wrap">
-      {/* 用户名 */}
-      <div className="user-info">
-        <div className="user-name">{item.user.uname}</div>
-      </div>
-      {/* 评论内容 */}
-      <div className="root-reply">
-        <span className="reply-content">{item.content}</span>
-        <div className="reply-info">
-          {/* 评论时间 */}
-          <span className="reply-time">{item.ctime}</span>
-          {/* 评论数量 */}
-          <span className="reply-time">点赞数:{item.like}</span>
-          {item.user.uid !== user.uid && <span className="delete-btn" onClick={()=>onDeletClicked(item.user.uid)}>
-            删除
-          </span>}
-
-
+      <div className="content-wrap">
+        {/* 用户名 */}
+        <div className="user-info">
+          <div className="user-name">{item.user.uname}</div>
+        </div>
+        {/* 评论内容 */}
+        <div className="root-reply">
+          <span className="reply-content">{item.content}</span>
+          <div className="reply-info">
+            {/* 评论时间 */}
+            <span className="reply-time">{item.ctime}</span>
+            {/* 评论数量 */}
+            <span className="reply-time">点赞数:{item.like}</span>
+            {item.user.uid !== user.uid && <span className="delete-btn" onClick={()=>onDeletClicked(item.user.uid)}>
+              删除
+            </span>}
+          </div>
         </div>
       </div>
     </div>
-  </div>)
+  )
+  }
+  function CommentItemList() {
+    return  commentList.map(item=>(<CommentItem key= {item.id} item={item}/>))
   }
   return (
     <div className="app">
