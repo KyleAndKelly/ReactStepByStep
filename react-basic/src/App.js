@@ -7,7 +7,7 @@ import {useEffect} from "react"
 // const isLogin = true
 // const flag = true
 // const contentType = 1
-const URL = "http://geek.itheima.net/v1_0/channels"
+// const URL = "http://geek.itheima.net/v1_0/channels"
  
 
 
@@ -96,7 +96,7 @@ function App() {
   // const [inputValue,setInputValue] = React.useState("")
   // const [message,setMsg] = React.useState("")
   // const inputRef = React.useRef(null)
-  const [list, setList] = React.useState([])
+  // const [list, setList] = React.useState([])
 
   // const updateCount = ()=>{
   //   // count++ //not work
@@ -125,15 +125,15 @@ function App() {
   //   setMsg(msg)
   // } 
 
-  useEffect (()=>{
-      async function getList(){
-        const res = await fetch(URL)
-        const jsonRes = await res.json()
-        console.log(jsonRes)
-        setList(jsonRes.data.channels)
-      }
-      getList()
-    },[])
+  // useEffect (()=>{
+  //     async function getList(){
+  //       const res = await fetch(URL)
+  //       const jsonRes = await res.json()
+  //       console.log(jsonRes)
+  //       setList(jsonRes.data.channels)
+  //     }
+  //     getList()
+  //   },[])
 
   return (
     <div className="App">
@@ -210,11 +210,13 @@ function App() {
         <Son5/>
       </MsgContext.Provider> */}
 
-      {
+      {/* {
         <ul>
           {list.map(item=><li key={item.id}>{item.name}</li>)}
         </ul>
-      }
+      } */}
+
+
     </div>
   );
 }

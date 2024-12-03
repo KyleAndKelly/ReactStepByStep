@@ -1,0 +1,80 @@
+<!-- <button id="increment">+</button>
+<button id="count">0</button>
+<button id="decriement">-</button>
+
+<script src="https://unpkg.com/redux@latest/dist/redux.min.js"></script>
+
+<script>
+    function reducer(state = {count:0}, action){
+        if(action.type === 'INCREMENT'){
+            return {count: state.count+1}
+        }
+        if(action.type === 'DECREMENT') {
+            return {count: state.count-1}
+        }
+        return state
+        
+    }
+
+    const store = Redux.createStore(reducer)
+    store.subcribe(()=>{
+        console.log("state data changed!")
+    })
+
+    const ibtn = document.getElementById("increment")
+    ibtn.addEventListener('click',()=>{
+        store.dispatch({
+            type:'INCREMENT'
+        })
+    })
+
+    const dbtn = document.getElementById("decrement")
+    dbtn.addEventListener('click',()=>{
+        store.dispatch({
+            type:'DECREMENT'
+        })
+    })
+</script> -->
+<button id="decrement">-</button>
+<span id="count">0</span>
+<button id="increment">+</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.2.1/redux.min"></script>
+
+<script>
+  // 定义reducer函数 
+  // 内部主要的工作是根据不同的action 返回不同的state
+  function counterReducer (state = { count: 0 }, action) {
+    switch (action.type) {
+      case 'INCREMENT':
+        return { count: state.count + 1 }
+      case 'DECREMENT':
+        return { count: state.count - 1 }
+      default:
+        return state
+    }
+  }
+  // 使用reducer函数生成store实例
+  const store = Redux.createStore(counterReducer)
+
+  // 订阅数据变化
+  store.subscribe(() => {
+    console.log(store.getState())
+    document.getElementById('count').innerText = store.getState().count
+
+  })
+  // 增
+  const inBtn = document.getElementById('increment')
+  inBtn.addEventListener('click', () => {
+    store.dispatch({
+      type: 'INCREMENT'
+    })
+  })
+  // 减
+  const dBtn = document.getElementById('decrement')
+  dBtn.addEventListener('click', () => {
+    store.dispatch({
+      type: 'DECREMENT'
+    })
+  })
+</script>
